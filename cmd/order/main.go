@@ -55,7 +55,7 @@ func run(log *zap.SugaredLogger) error {
 	}
 	serverErrors := make(chan error, 1)
 	go func() {
-		fmt.Printf("main: Listening on %s", api.Addr)
+		log.Infow("main: Listening on %s", api.Addr)
 		serverErrors <- api.ListenAndServe()
 	}()
 	shutdown := make(chan os.Signal, 1)
@@ -71,7 +71,7 @@ func run(log *zap.SugaredLogger) error {
 		defer cancel()
 		err := api.Shutdown(ctx)
 		if err != nil {
-			fmt.Printf("main: Graceful shutdown did not complete in %d: %v", timeout, err)
+			log.Infow("main: Graceful shutdown did not complete in %d: %v", timeout, err)
 			err = api.Close()
 		}
 		if err != nil {
